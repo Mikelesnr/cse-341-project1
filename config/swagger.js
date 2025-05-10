@@ -1,3 +1,6 @@
+const dotenv = require("dotenv");
+dotenv.config();
+
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
@@ -10,7 +13,7 @@ const options = {
       description: "A simple API for managing contacts"
     },
     servers: [
-      { url: "http://localhost:3000" } // Change to your actual server URL
+      { url: process.env.SERVER_URL || "http://localhost:3000" } // Change to your actual server URL
     ]
   },
   apis: ["./routes/*.js"] // Points to your API route files
