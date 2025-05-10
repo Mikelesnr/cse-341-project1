@@ -3,13 +3,22 @@ require('dotenv').config();
 
 const express = require('express');
 const app = express();
+const mongodb = require('./data/database.js');
 
 const port = process.env.PORT || 8080;
 
-app.use('/', require('./routes/index'));
+app.use('/', require('./routes'));
 
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-})
+mongodb.connDb((err) => {
+    if (err) {
+        console.error('Failed to connect to the database:', err);
+        return;
+    }
+    else {
+        app.listen(port, () => {
+            console.log(`Database connected and Server is running on port ${port}`);
+        })
+    }
+}
+);
 
-console.log(`Server is listening on port ${port}`);
