@@ -1,24 +1,19 @@
-const dotenv = require("dotenv");
-dotenv.config();
+require("dotenv").config();
+const swaggerAutogen = require("swagger-autogen")();
 
-const swaggerJsdoc = require("swagger-jsdoc");
-const swaggerUi = require("swagger-ui-express");
-
-const options = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "Contacts API",
-      version: "1.0.0",
-      description: "A simple API for managing contacts"
-    },
-    servers: [
-      { url: process.env.SERVER_URL} // Change to your actual server URL
-    ]
+const doc = {
+  info: {
+    title: "CSE-341 Contacts Project",
+    description: "API documentation for the contacts project",
   },
-  apis: ["./routes/*.js"] // Points to your API route files
+  host: process.env.SERVER_URL.replace(/^https?:\/\//, "") || "localhost:3000",
+  schemes: [process.env.PROTOCOL || "http"],
 };
 
-const specs = swaggerJsdoc(options);
+const outputFile = "./swagger.json";
+const endpointsFiles = ["./routes/contacts.js"];
 
-module.exports = { swaggerUi, specs };
+swaggerAutogen(outputFile, endpointsFiles, doc).then(() => {
+  console.log("✅ Swagger documentation generated successfully!");
+  process.exit(); // Forces the script to exit after completion
+});
